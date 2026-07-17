@@ -1,5 +1,7 @@
 from backend.ai.agents.base import BaseAgent
 
+__all__ = ["NavigationAgent"]
+
 
 class NavigationAgent(BaseAgent):
     name = "navigation"
@@ -11,13 +13,7 @@ class NavigationAgent(BaseAgent):
     )
 
     def build_context(self, query: str, rag_context: list[str], live_data: dict, chat_history: list[dict] | None = None) -> str:
-        knowledge = "\n".join(rag_context) or "No specific map data retrieved."
-        history_str = self.format_history(chat_history)
-        return (
-            f"Conversation History:\n{history_str}\n\n"
-            f"Fan question: {query}\n\n"
-            f"Stadium map knowledge:\n{knowledge}"
-        )
+        return self.build_prompt_block(query, rag_context, chat_history, "Stadium map knowledge")
 
     def fallback_response(self, query: str, rag_context: list[str], live_data: dict, chat_history: list[dict] | None = None) -> str:
         if rag_context:

@@ -8,6 +8,7 @@ monkeypatch `settings` instead of touching the real environment).
 """
 
 from functools import lru_cache
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -26,6 +27,7 @@ class Settings(BaseSettings):
     # App
     app_env: str = "development"
     rate_limit_per_minute: int = 30
+    cors_allowed_origins: list[str] = ["http://127.0.0.1:5500", "http://localhost:5500", "http://127.0.0.1:8000"]
 
     @property
     def is_production(self) -> bool:

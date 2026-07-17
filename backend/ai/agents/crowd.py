@@ -1,5 +1,7 @@
 from backend.ai.agents.base import BaseAgent
 
+__all__ = ["CrowdAgent"]
+
 
 class CrowdAgent(BaseAgent):
     name = "crowd"
@@ -12,12 +14,7 @@ class CrowdAgent(BaseAgent):
     def build_context(self, query: str, rag_context: list[str], live_data: dict, chat_history: list[dict] | None = None) -> str:
         gates = live_data.get("crowd", {}).get("gates", {})
         density_summary = ", ".join(f"{g}: {level}" for g, level in gates.items()) or "no data"
-        history_str = self.format_history(chat_history)
-        return (
-            f"Conversation History:\n{history_str}\n\n"
-            f"Fan question: {query}\n\n"
-            f"Live gate crowd levels: {density_summary}"
-        )
+        return self.build_prompt_block(query, [density_summary], chat_history, "Live gate crowd levels")
 
     def fallback_response(self, query: str, rag_context: list[str], live_data: dict, chat_history: list[dict] | None = None) -> str:
         gates = live_data.get("crowd", {}).get("gates", {})

@@ -12,16 +12,17 @@ import uuid
 
 from fastapi import FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 
 from backend.api.auth import router as auth_router
-from backend.api.routes import limiter
 from backend.api.routes import router as chat_router
 from backend.core.config import settings
 from backend.core.logging_config import configure_logging, get_logger
+from backend.core.rate_limit import limiter
 
 configure_logging()
 logger = get_logger(__name__)
@@ -35,16 +36,29 @@ app = FastAPI(
 )
 
 app.state.limiter = limiter
-app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)  # type: ignore[arg-type]
 
-# CORS: open for MVP demo purposes (static frontend served separately).
-# In production this would be restricted to the deployed frontend origin.
+# CORS configuration restricted to settings config (CORS protection)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=settings.cors_allowed_origins,
+    allow_credentials=True,
     allow_methods=["GET", "POST"],
     allow_headers=["*"],
 )
+
+# Enable GZip compression for responses > 500 bytes
+app.add_middleware(GZipMiddleware, minimum_size=500)
+
+
+# Inject standard security headers
+@app.middleware("http")
+async def security_headers(request: Request, call_next):
+    response = await call_next(request)
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["Referrer-Policy"] = "no-referrer"
+    return response
 
 
 @app.exception_handler(Exception)

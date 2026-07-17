@@ -10,14 +10,14 @@ to callers -- only this file.
 """
 
 import random
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 _GATES = ["Gate 1", "Gate 2", "Gate 3", "Gate 4", "North Concourse", "South Concourse"]
 
 
 def get_crowd_density() -> dict:
     return {
-        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "timestamp": datetime.now(UTC).isoformat(),
         "gates": {gate: random.choice(["low", "moderate", "high"]) for gate in _GATES},
     }
 

@@ -1,5 +1,7 @@
 from backend.ai.agents.base import BaseAgent
 
+__all__ = ["EmergencyAgent"]
+
 
 class EmergencyAgent(BaseAgent):
     name = "emergency"

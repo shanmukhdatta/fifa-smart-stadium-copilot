@@ -16,7 +16,7 @@ working code for the pieces that are actually exercised by the app.
 from __future__ import annotations
 
 import re
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from typing import Any
 
 import bcrypt
@@ -57,7 +57,7 @@ def verify_password(plain: str, hashed: str) -> bool:
 def create_access_token(subject: str, role: str) -> str:
     if role not in VALID_ROLES:
         raise ValueError(f"Unknown role: {role}")
-    expire = datetime.now(timezone.utc) + timedelta(
+    expire = datetime.now(UTC) + timedelta(
         minutes=settings.jwt_expire_minutes
     )
     payload = {"sub": subject, "role": role, "exp": expire}

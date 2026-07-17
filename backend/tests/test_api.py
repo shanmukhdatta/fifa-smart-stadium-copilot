@@ -84,10 +84,24 @@ def test_chat_history_preserved():
         json={"message": "Where is the nearest restroom to Gate 2?", "language": "en"},
         headers={"Authorization": f"Bearer {token}"},
     )
-    from backend.api.routes import _SESSION_HISTORY
-    history = _SESSION_HISTORY.get("demo-fan")
+    from backend.api.routes import _get_history
+    history = _get_history("demo-fan")
     assert history is not None
     assert len(history) >= 2
     assert history[-2]["role"] == "user"
     assert "Gate 2" in history[-2]["content"]
     assert history[-1]["role"] == "assistant"
+
+
+def test_demo_token_rate_limited():
+    from backend.core.rate_limit import limiter
+    limiter.reset()
+
+    # Make 5 requests within the limit (5/minute)
+    for _ in range(5):
+        resp = client.post("/api/auth/demo-token", params={"role": "fan"})
+        assert resp.status_code == 200
+
+    # The 6th request should trigger a 429
+    resp = client.post("/api/auth/demo-token", params={"role": "fan"})
+    assert resp.status_code == 429

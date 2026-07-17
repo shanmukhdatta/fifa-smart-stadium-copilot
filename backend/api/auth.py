@@ -8,10 +8,12 @@ pattern as the rest of the app) is a small, contained change limited to
 storage directly, since everything downstream depends only on the JWT.
 """
 
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, Request, status
 
+from backend.core.config import settings
 from backend.core.logging_config import get_logger
-from backend.core.security import create_access_token, hash_password, verify_password, log_security_event
+from backend.core.rate_limit import limiter
+from backend.core.security import create_access_token, hash_password, log_security_event, verify_password
 from backend.schemas.chat import LoginRequest, TokenResponse
 
 logger = get_logger(__name__)
@@ -27,7 +29,8 @@ _USERS: dict[str, dict] = {
 
 
 @router.post("/login", response_model=TokenResponse)
-def login(payload: LoginRequest) -> TokenResponse:
+@limiter.limit("10/minute")
+def login(request: Request, payload: LoginRequest) -> TokenResponse:
     user = _USERS.get(payload.username)
     if not user or not verify_password(payload.password, user["password"]):
         log_security_event("AUTH_FAILURE", f"Failed login attempt for username={payload.username}", severity="WARNING")
@@ -40,13 +43,17 @@ def login(payload: LoginRequest) -> TokenResponse:
 
 
 @router.post("/demo-token", response_model=TokenResponse)
-def demo_token(role: str = "fan") -> TokenResponse:
+@limiter.limit("5/minute")
+def demo_token(request: Request, role: str = "fan") -> TokenResponse:
     """
     Convenience endpoint for hackathon judges/demos: issues a short-lived
     token without needing to know a seeded username/password. Not exposed
     in a real deployment -- gated here so the judge can test the full
     authenticated flow in one click.
     """
+    if settings.is_production:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not Found")
+
     if role not in {"fan", "volunteer", "staff", "organizer"}:
         role = "fan"
     token = create_access_token(subject=f"demo-{role}", role=role)

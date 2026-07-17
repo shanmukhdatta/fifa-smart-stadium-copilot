@@ -18,6 +18,8 @@ from backend.core.logging_config import get_logger
 
 logger = get_logger(__name__)
 
+__all__ = ["BaseAgent"]
+
 
 class BaseAgent(ABC):
     name: str = "base"
@@ -31,6 +33,23 @@ class BaseAgent(ABC):
             role = "Fan" if msg["role"] == "user" else "Copilot"
             lines.append(f"{role}: {msg['content']}")
         return "\n".join(lines)
+
+    def build_prompt_block(
+        self,
+        query: str,
+        knowledge: list[str],
+        chat_history: list[dict] | None,
+        knowledge_label: str = "Retrieved knowledge",
+        no_knowledge_text: str = "No specific data retrieved.",
+    ) -> str:
+        """Shared prompt-assembly used by every agent's build_context to avoid logic duplication."""
+        knowledge_str = "\n".join(knowledge) or no_knowledge_text
+        history_str = self.format_history(chat_history)
+        return (
+            f"Conversation History:\n{history_str}\n\n"
+            f"Fan question: {query}\n\n"
+            f"{knowledge_label}:\n{knowledge_str}"
+        )
 
     @abstractmethod
     def build_context(self, query: str, rag_context: list[str], live_data: dict, chat_history: list[dict] | None = None) -> str:

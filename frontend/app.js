@@ -14,14 +14,22 @@
 
   let token = null;
 
+  const a11yStatus = document.getElementById("a11y-status");
+
   // --- Accessibility toggles ---
   contrastBtn.addEventListener("click", () => {
     const on = document.body.classList.toggle("high-contrast");
     contrastBtn.setAttribute("aria-pressed", String(on));
+    if (a11yStatus) {
+      a11yStatus.textContent = on ? "High contrast mode enabled" : "High contrast mode disabled";
+    }
   });
   textBtn.addEventListener("click", () => {
     const on = document.body.classList.toggle("large-text");
     textBtn.setAttribute("aria-pressed", String(on));
+    if (a11yStatus) {
+      a11yStatus.textContent = on ? "Large text mode enabled" : "Large text mode disabled";
+    }
   });
 
   // --- Voice input (Web Speech API, graceful no-op if unsupported) ---

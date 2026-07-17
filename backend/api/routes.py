@@ -3,20 +3,26 @@
 import uuid
 
 from fastapi import APIRouter, Depends, Request
-from slowapi import Limiter
-from slowapi.util import get_remote_address
 
 from backend.ai.graph import get_graph
+from backend.core.cache import TTLCache
 from backend.core.logging_config import get_logger
+from backend.core.rate_limit import limiter
 from backend.core.security import get_current_user, redact
 from backend.schemas.chat import AgentResult, ChatRequest, ChatResponse
 
 logger = get_logger(__name__)
 router = APIRouter(prefix="/api", tags=["copilot"])
-limiter = Limiter(key_func=get_remote_address)
+
+_session_cache = TTLCache(ttl_seconds=1800)  # 30 min idle session expiry
 
 
-_SESSION_HISTORY: dict[str, list[dict[str, str]]] = {}
+def _get_history(user_id: str) -> list[dict]:
+    return _session_cache.get(user_id) or []
+
+
+def _save_history(user_id: str, history: list[dict]) -> None:
+    _session_cache.set(user_id, history[-10:])
 
 
 @router.post("/chat", response_model=ChatResponse)
@@ -36,9 +42,7 @@ async def chat(
         redact(payload.message),
     )
 
-    if user_id not in _SESSION_HISTORY:
-        _SESSION_HISTORY[user_id] = []
-    history = _SESSION_HISTORY[user_id]
+    history = _get_history(user_id)
 
     graph = get_graph()
     initial_state = {
@@ -57,9 +61,7 @@ async def chat(
     # Save current turn to session history
     history.append({"role": "user", "content": payload.message})
     history.append({"role": "assistant", "content": result.get("response_text", "")})
-    if len(history) > 10:
-        history = history[-10:]
-    _SESSION_HISTORY[user_id] = history
+    _save_history(user_id, history)
 
     agent_results = [
         AgentResult(

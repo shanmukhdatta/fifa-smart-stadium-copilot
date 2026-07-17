@@ -1,0 +1,28 @@
+[tool.ruff]
+line-length = 120
+target-version = "py313"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP", "B", "A", "C4", "PT", "ARG", "PTH", "RET", "SIM"]
+ignore = [
+    "B008",    # FastAPI Depends in defaults
+    "ARG001",  # Unused arguments (Request params for rate limiters, mock kwargs)
+    "ARG002",  # Unused method arguments (BaseAgent contract compliance)
+    "PTH118",  # os.path.join usage is preferred for simplicity
+    "PTH120",  # os.path.dirname usage
+    "RET504",  # Unnecessary assignment before return
+    "PT011",   # Pytest raises ValueError broadness
+    "B905",    # strict parameter in zip()
+    "E501",    # Line too long (RAG prompt guidelines / translations)
+    "SIM108"   # Ternary operator simplification (readability preference)
+]
+
+[tool.mypy]
+python_version = "3.13"
+strict = true
+ignore_missing_imports = true
+exclude = [
+    ".venv",
+    "venv",
+    "tests"
+]
