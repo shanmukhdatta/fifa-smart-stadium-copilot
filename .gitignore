@@ -1,0 +1,27 @@
+# Python virtual environment and bytecode caches
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+env/
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+
+# FastAPI Environment Secrets
+.env
+.env.*
+!.env.example
+
+# OS / IDE specific
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+.project
+.pydevproject

@@ -1,0 +1,177 @@
+:root {
+  --pitch: #047857;
+  --pitch-light: #10b981;
+  --floodlight: #d97706;
+  --night: transparent;
+  --night-2: rgba(255, 255, 255, 0.75);
+  --line: rgba(15, 23, 42, 0.08);
+  --ink: #0f172a;
+  --ink-dim: #475569;
+  --glass: rgba(255, 255, 255, 0.8);
+  --glass-border: rgba(15, 23, 42, 0.08);
+  --shadow-glow: rgba(16, 185, 129, 0.12);
+}
+
+/* Base resets & scrollbar configuration */
+* {
+  -webkit-font-smoothing: antialiased;
+  box-sizing: border-box;
+}
+
+body {
+  background: url('football_white_bg.png') no-repeat center center fixed;
+  background-size: cover;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Custom Webkit scrollbar for Chat Log */
+.scrollbar-custom::-webkit-scrollbar {
+  width: 6px;
+}
+.scrollbar-custom::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scrollbar-custom::-webkit-scrollbar-thumb {
+  background: var(--line);
+  border-radius: 9999px;
+}
+.scrollbar-custom::-webkit-scrollbar-thumb:hover {
+  background: var(--ink-dim);
+}
+
+/* Glassmorphism Panel styles */
+.glass-panel {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-radius: 1.25rem;
+  box-shadow: 0 10px 40px 0 rgba(15, 23, 42, 0.06);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.glass-panel:hover {
+  border-color: rgba(16, 185, 129, 0.3);
+  box-shadow: 0 10px 40px 0 rgba(15, 23, 42, 0.1), 0 0 20px 0 var(--shadow-glow);
+}
+
+/* Stitching separator effect */
+.stitch {
+  background-image: repeating-linear-gradient(90deg, rgba(15, 23, 42, 0.08) 0 6px, transparent 6px 14px);
+  height: 1px;
+}
+
+/* Buttons and dropdown selectors */
+.gate-badge {
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(8px);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.gate-badge:hover {
+  background: rgba(15, 23, 42, 0.03);
+  border-color: var(--ink-dim);
+}
+
+/* Message bubble designs */
+.msg-fan {
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  align-self: flex-end;
+  border-bottom-right-radius: 2px;
+  animation: slide-in-right 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.msg-copilot {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.8) 100%);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  align-self: flex-start;
+  border-bottom-left-radius: 2px;
+  animation: slide-in-left 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Accordion Expandable Styling */
+.accordion-item.active {
+  border-color: rgba(16, 185, 129, 0.35);
+  background: rgba(255, 255, 255, 0.95);
+}
+.accordion-item.active .chevron {
+  transform: rotate(180deg);
+  color: var(--pitch);
+}
+
+/* High Contrast Override variables */
+.high-contrast body, body.high-contrast {
+  --night: #000000;
+  --night-2: #000000;
+  --ink: #ffffff;
+  --ink-dim: #ffffff;
+  --line: #ffffff;
+  --glass: #000000;
+  --glass-border: #ffffff;
+  --pitch: #00c853;
+  --pitch-light: #00c853;
+  --floodlight: #ffd600;
+  --shadow-glow: transparent;
+}
+.high-contrast .gate-badge, .high-contrast .msg-fan, .high-contrast .msg-copilot {
+  border-color: #ffffff !important;
+  background: #000000 !important;
+  color: #ffffff !important;
+}
+
+/* Text Size Toggle override */
+.large-text body, body.large-text {
+  font-size: 115%;
+}
+
+/* Accessibility Focus States */
+.focus-ring:focus-visible {
+  outline: 3px solid var(--floodlight);
+  outline-offset: 2px;
+}
+
+/* Keyframe animations */
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateY(12px) translateX(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) translateX(0);
+  }
+}
+
+@keyframes slide-in-left {
+  from {
+    opacity: 0;
+    transform: translateY(12px) translateX(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) translateX(0);
+  }
+}
+
+/* Pulse animation utility */
+.animate-pulse-slow {
+  animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: .85;
+    transform: scale(0.96);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

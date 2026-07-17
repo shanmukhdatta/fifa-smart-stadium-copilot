@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stadium Copilot — FIFA World Cup 2026</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/3.4.4/tailwind.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body class="h-full flex flex-col font-[Outfit] text-[var(--ink)] bg-[var(--night)] overflow-hidden">
+
+  <!-- Skip Link for Accessibility -->
+  <a href="#chat-input" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:bg-[var(--floodlight)] focus:text-black focus:px-4 focus:py-2 focus:rounded-lg focus:font-semibold">
+    Skip to message input
+  </a>
+
+  <!-- Header -->
+  <header class="border-b border-[var(--line)] bg-[var(--night-2)]/60 backdrop-blur-md relative z-10 flex-shrink-0">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full flex items-center justify-center text-xl font-bold bg-[var(--pitch)] shadow-lg shadow-[var(--pitch)]/20 animate-pulse-slow" aria-hidden="true">⚽</div>
+        <div>
+          <h1 class="text-xl font-bold tracking-wide bg-gradient-to-r from-[var(--ink)] via-[var(--pitch)] to-[var(--floodlight)] bg-clip-text text-transparent">Stadium Copilot</h1>
+          <p class="text-[10px] tracking-widest mono text-[var(--ink-dim)] uppercase">FIFA World Cup 2026 · Matchday Intelligence</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <label for="lang-select" class="sr-only">Response language</label>
+        <select id="lang-select" class="focus-ring gate-badge text-sm rounded-lg px-2.5 py-1.5 mono text-[var(--ink)] cursor-pointer" aria-label="Choose response language">
+          <option value="en">EN</option>
+          <option value="es">ES</option>
+          <option value="fr">FR</option>
+          <option value="ar">AR</option>
+          <option value="pt">PT</option>
+          <option value="hi">HI</option>
+        </select>
+
+        <button id="contrast-toggle" type="button" class="focus-ring gate-badge text-sm rounded-lg px-3 py-1.5 mono transition duration-200 hover:bg-[var(--line)]" aria-pressed="false" aria-label="Toggle high contrast mode">
+          ◐ Contrast
+        </button>
+        <button id="text-toggle" type="button" class="focus-ring gate-badge text-sm rounded-lg px-3 py-1.5 mono transition duration-200 hover:bg-[var(--line)]" aria-pressed="false" aria-label="Toggle large text mode">
+          A+ Text
+        </button>
+      </div>
+    </div>
+    <div class="stitch"></div>
+  </header>
+
+  <!-- Main Dashboard Container -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-6 py-6 flex flex-col md:flex-row gap-6 overflow-hidden">
+    
+    <!-- Sidebar (Telemetry & Role Selector) -->
+    <aside class="w-full md:w-80 flex flex-col gap-4 flex-shrink-0 overflow-y-auto pr-1" aria-label="Stadium Live Feeds">
+      
+      <!-- Role/Status Card -->
+      <div class="glass-panel p-4 flex flex-col gap-3 flex-shrink-0">
+        <h2 class="text-xs uppercase tracking-widest font-semibold text-[var(--ink-dim)] mono">Active Context</h2>
+        
+        <div class="flex items-center justify-between">
+          <label for="role-select" class="text-sm text-[var(--ink-dim)]">User Role:</label>
+          <select id="role-select" class="focus-ring gate-badge text-xs rounded px-2 py-1 mono text-[var(--ink)] cursor-pointer" aria-label="Select your role for this demo">
+            <option value="fan">Fan</option>
+            <option value="volunteer">Volunteer</option>
+            <option value="staff">Staff</option>
+          </select>
+        </div>
+
+        <div class="flex items-center justify-between border-t border-[var(--line)] pt-3 text-xs mono">
+          <span class="text-[var(--ink-dim)]">Network:</span>
+          <span id="conn-status" class="flex items-center gap-1.5 font-semibold text-[#e05c5c]" role="status">
+            <span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping inline-block"></span> offline
+          </span>
+        </div>
+      </div>
+
+      <!-- Telemetry Cards Panel -->
+      <div class="glass-panel p-4 flex flex-col gap-4 flex-shrink-0">
+        <div class="flex items-center justify-between border-b border-[var(--line)] pb-2 mb-1">
+          <h2 class="text-xs uppercase tracking-widest font-semibold text-[var(--ink-dim)] mono">Live Stadium Status</h2>
+          <span class="text-[10px] bg-[var(--pitch)]/20 text-[var(--pitch-light)] font-semibold px-2 py-0.5 rounded-full uppercase tracking-wider mono animate-pulse">Live</span>
+        </div>
+
+        <!-- Crowd Level Metric -->
+        <div class="flex flex-col gap-1.5 text-xs">
+          <div class="flex justify-between font-semibold">
+            <span class="text-[var(--ink-dim)] mono">GATE CROWD LEVELS</span>
+            <span id="tel-gate-status" class="text-[var(--floodlight)] mono">Gate 1 High</span>
+          </div>
+          <div class="w-full bg-[var(--line)] h-1.5 rounded-full overflow-hidden">
+            <div id="tel-gate-bar" class="bg-gradient-to-r from-[var(--pitch)] to-[var(--floodlight)] h-full rounded-full transition-all duration-500" style="width: 78%;"></div>
+          </div>
+        </div>
+
+        <!-- Parking Lots Occupancy -->
+        <div class="flex flex-col gap-2 text-xs">
+          <span class="text-[var(--ink-dim)] uppercase tracking-wide font-semibold mono">PARKING OCCUPANCY</span>
+          <div class="grid grid-cols-2 gap-2 text-[10px] mono">
+            <div class="bg-[var(--night-2)] border border-[var(--line)] rounded p-2 flex flex-col">
+              <span class="text-[var(--ink-dim)]">LOT A</span>
+              <span id="tel-lot-a" class="font-bold text-sm">345 / 500</span>
+            </div>
+            <div class="bg-[var(--night-2)] border border-[var(--line)] rounded p-2 flex flex-col">
+              <span class="text-[var(--ink-dim)]">LOT B</span>
+              <span id="tel-lot-b" class="font-bold text-sm">482 / 500</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Transportation Status -->
+        <div class="flex flex-col gap-2 text-xs">
+          <span class="text-[var(--ink-dim)] uppercase tracking-wide font-semibold mono">PUBLIC TRANSIT</span>
+          <div class="flex flex-col gap-1.5 font-semibold text-[11px] mono">
+            <div class="flex justify-between bg-[var(--night-2)]/40 border border-[var(--line)] px-2.5 py-1.5 rounded">
+              <span class="text-[var(--ink-dim)]">METRO LINE 2</span>
+              <span id="tel-metro" class="text-[var(--pitch-light)]">● NOMINAL</span>
+            </div>
+            <div class="flex justify-between bg-[var(--night-2)]/40 border border-[var(--line)] px-2.5 py-1.5 rounded">
+              <span class="text-[var(--ink-dim)]">SHUTTLE WAIT</span>
+              <span id="tel-shuttle" class="text-[var(--floodlight)]">5 MINS</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Weather/Environment -->
+        <div class="flex flex-col gap-2 text-xs pt-3 border-t border-[var(--line)]">
+          <span class="text-[var(--ink-dim)] uppercase tracking-wide font-semibold mono">METEOROLOGICAL</span>
+          <div class="flex items-center justify-between text-xs mono">
+            <span class="text-sm font-semibold">☀️ 24°C</span>
+            <span class="text-[var(--ink-dim)]">HUMIDITY: 42%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Collapsible Educational Details Accordions -->
+      <div class="flex flex-col gap-2.5 flex-shrink-0">
+        <!-- Accordion 1: Specialties -->
+        <div class="accordion-item bg-[var(--night-2)]/40 border border-[var(--line)] rounded-xl overflow-hidden transition-all duration-300">
+          <button type="button" class="accordion-trigger w-full px-4 py-3 flex justify-between items-center text-xs font-semibold uppercase tracking-wider text-[var(--ink-dim)] hover:text-white transition duration-200">
+            <span>Specialties &amp; Roles</span>
+            <span class="chevron text-[8px] transform transition-transform duration-200">▼</span>
+          </button>
+          <div class="accordion-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+            <div class="p-3 text-[11px] leading-relaxed text-[var(--ink-dim)] border-t border-[var(--line)] flex flex-col gap-2 bg-[var(--night-2)]/20">
+              <p>⚽ <strong class="text-white">Navigation Agent:</strong> Directs fans to gates, concessions, toilets, and sections.</p>
+              <p>👥 <strong class="text-white">Crowd Agent:</strong> Uses live sensor telemetry to identify congestion and advise routes.</p>
+              <p>♿ <strong class="text-white">Accessibility Agent:</strong> Coordinates wheelchair routing, elevators, and quiet spaces.</p>
+              <p>🚨 <strong class="text-white">Emergency Agent:</strong> Flags safety issues, alerts stewards, and handles SOPs.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Accordion 2: Workflow -->
+        <div class="accordion-item bg-[var(--night-2)]/40 border border-[var(--line)] rounded-xl overflow-hidden transition-all duration-300">
+          <button type="button" class="accordion-trigger w-full px-4 py-3 flex justify-between items-center text-xs font-semibold uppercase tracking-wider text-[var(--ink-dim)] hover:text-white transition duration-200">
+            <span>LangGraph Workflow</span>
+            <span class="chevron text-[8px] transform transition-transform duration-200">▼</span>
+          </button>
+          <div class="accordion-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+            <div class="p-3 text-[10px] mono leading-relaxed text-[var(--ink-dim)] border-t border-[var(--line)] flex flex-col gap-1.5 bg-[var(--night-2)]/20">
+              <div>1. <span class="text-white">validate_input</span> (check injection)</div>
+              <div>2. <span class="text-white">planner</span> (agent routing)</div>
+              <div>3. <span class="text-white">knowledge_live_data</span> (fetch RAG)</div>
+              <div>4. <span class="text-white">parallel_agents</span> (execute LLM)</div>
+              <div>5. <span class="text-white">decision_fusion</span> (aggregate SOP)</div>
+              <div>6. <span class="text-white">response_gen</span> (translate)</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Accordion 3: Tech Features -->
+        <div class="accordion-item bg-[var(--night-2)]/40 border border-[var(--line)] rounded-xl overflow-hidden transition-all duration-300">
+          <button type="button" class="accordion-trigger w-full px-4 py-3 flex justify-between items-center text-xs font-semibold uppercase tracking-wider text-[var(--ink-dim)] hover:text-white transition duration-200">
+            <span>Special Operations</span>
+            <span class="chevron text-[8px] transform transition-transform duration-200">▼</span>
+          </button>
+          <div class="accordion-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+            <div class="p-3 text-[11px] leading-relaxed text-[var(--ink-dim)] border-t border-[var(--line)] flex flex-col gap-2 bg-[var(--night-2)]/20">
+              <p>🧠 <strong class="text-white">Session Memory:</strong> Tracks multi-turn questions contextually.</p>
+              <p>🔒 <strong class="text-white">Output Validation:</strong> Guards against prompt leaks and hallucinated gates.</p>
+              <p>🚰 <strong class="text-white">Connection Pool:</strong> Shared HTTP resources via Uvicorn backend.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- Chat Container -->
+    <section class="flex-1 flex flex-col glass-panel overflow-hidden relative" aria-label="Stadium Copilot Assistant">
+      
+      <!-- Top Chat Bar -->
+      <div class="bg-[var(--night-2)]/40 px-6 py-3 border-b border-[var(--line)] flex items-center justify-between flex-shrink-0">
+        <div class="flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-[var(--pitch-light)] animate-pulse"></span>
+          <span class="text-xs font-semibold uppercase tracking-wider text-[var(--ink-dim)] mono">GenAI Copilot Stream</span>
+        </div>
+        <span class="text-[10px] font-mono text-[var(--ink-dim)]">SECURE END-TO-END</span>
+      </div>
+
+      <!-- Chat Log Area -->
+      <div id="chat-log" class="flex-1 overflow-y-auto px-6 py-4 flex flex-col gap-4 scrollbar-custom" aria-live="polite" aria-label="Conversation Log">
+        
+        <!-- Welcome Message -->
+        <div class="msg-copilot rounded-2xl p-4 max-w-xl self-start shadow-md">
+          <p class="text-xs uppercase tracking-widest font-semibold mb-1 text-[var(--pitch-light)] mono">Copilot Assistant</p>
+          <p class="text-sm leading-relaxed">Welcome to the Stadium Copilot. I can guide you with seat routing, crowd alerts, public transit connections, or emergency assistance. Ask a question to begin.</p>
+        </div>
+
+      </div>
+
+      <!-- Suggestion Chips -->
+      <div id="suggestions" class="px-6 py-2.5 flex flex-wrap gap-2 flex-shrink-0 border-t border-[var(--line)]/50 bg-[var(--night)]/20">
+        <button class="suggestion focus-ring gate-badge text-[11px] font-medium rounded-full px-3.5 py-1.5 mono text-[var(--ink-dim)] hover:text-[var(--pitch)] hover:border-[var(--pitch)] transition duration-200">Where's the nearest restroom to Gate 2?</button>
+        <button class="suggestion focus-ring gate-badge text-[11px] font-medium rounded-full px-3.5 py-1.5 mono text-[var(--ink-dim)] hover:text-[var(--pitch)] hover:border-[var(--pitch)] transition duration-200">Wheelchair accessible entrance?</button>
+        <button class="suggestion focus-ring gate-badge text-[11px] font-medium rounded-full px-3.5 py-1.5 mono text-[var(--ink-dim)] hover:text-[var(--pitch)] hover:border-[var(--pitch)] transition duration-200">Which gate is least crowded?</button>
+        <button class="suggestion focus-ring gate-badge text-[11px] font-medium rounded-full px-3.5 py-1.5 mono text-[var(--ink-dim)] hover:text-[var(--pitch)] hover:border-[var(--pitch)] transition duration-200">There's a medical emergency near section 105</button>
+      </div>
+
+      <!-- Form Chat Input Area -->
+      <footer class="border-t border-[var(--line)] bg-[var(--night-2)]/60 backdrop-blur-md flex-shrink-0">
+        <div class="stitch"></div>
+        <form id="chat-form" class="px-6 py-4 flex gap-2.5 items-end">
+          <div class="relative flex-1">
+            <label for="chat-input" class="sr-only">Type your question to the stadium copilot</label>
+            <textarea id="chat-input" rows="1" maxlength="1000"
+                      class="focus-ring w-full rounded-xl px-4 py-3.5 pr-12 resize-none gate-badge bg-[var(--night)]/80 text-sm leading-relaxed"
+                      placeholder="Ask about navigation, crowds, accessibility, or emergencies…"
+                      aria-describedby="input-help"></textarea>
+            
+            <!-- Voice Dictation Button inside textarea -->
+            <button type="button" id="mic-btn"
+                    class="focus-ring absolute right-3 bottom-2.5 text-lg opacity-70 hover:opacity-100 transition duration-200 p-1 rounded-lg"
+                    aria-pressed="false" aria-label="Use voice input">
+              🎙️
+            </button>
+          </div>
+          <button type="submit"
+                  class="focus-ring rounded-xl px-6 py-3.5 font-bold uppercase tracking-wider text-xs mono transition duration-300 transform active:scale-95 bg-[var(--pitch)] text-white hover:bg-[var(--pitch-light)] shadow-lg shadow-[var(--pitch)]/20">
+            Send
+          </button>
+        </form>
+        <p id="input-help" class="sr-only">Press Enter to send, Shift+Enter for a new line.</p>
+      </footer>
+
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-[var(--line)] bg-[var(--night-2)]/60 backdrop-blur-md relative z-10 flex-shrink-0 text-center py-3 text-xs mono text-[var(--ink-dim)]">
+    <div class="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div>
+        Designed &amp; Developed by <span class="text-white font-semibold">Boda Shanmukha Datta</span>
+      </div>
+      <div class="flex items-center gap-4">
+        <a href="https://github.com/shanmukhdatta" target="_blank" rel="noopener noreferrer" class="hover:text-white transition duration-200 flex items-center gap-1">
+          <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+          GitHub
+        </a>
+        <span class="text-[var(--line)]">|</span>
+        <a href="https://www.linkedin.com/search/results/all/?keywords=Boda%20Shanmukha%20Datta" target="_blank" rel="noopener noreferrer" class="hover:text-white transition duration-200 flex items-center gap-1">
+          <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+          LinkedIn
+        </a>
+      </div>
+    </div>
+  </footer>
+
+<script src="app.js"></script>
+</body>
+</html>
