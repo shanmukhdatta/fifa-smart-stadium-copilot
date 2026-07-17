@@ -1,276 +1,478 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Stadium Copilot — FIFA World Cup 2026</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/3.4.4/tailwind.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 </head>
-<body class="h-full flex flex-col font-[Outfit] text-[var(--ink)] bg-[var(--night)] overflow-hidden">
+<body>
 
-  <!-- Skip Link for Accessibility -->
-  <a href="#chat-input" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:bg-[var(--floodlight)] focus:text-black focus:px-4 focus:py-2 focus:rounded-lg focus:font-semibold">
-    Skip to message input
-  </a>
+<!-- Icon sprite -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h16v11H8l-4 4V5z" stroke-linejoin="round"/></symbol>
+  <symbol id="i-map" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 4 4 6v14l5-2 6 2 5-2V4l-5 2-6-2z" stroke-linejoin="round"/><path d="M9 4v14M15 6v14"/></symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 10a6 6 0 0 1 12 0c0 5 2 6 2 6H4s2-1 2-6z"/><path d="M10 20a2 2 0 0 0 4 0"/></symbol>
+  <symbol id="i-flag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 3v18"/><path d="M5 4h13l-3 4 3 4H5"/></symbol>
+  <symbol id="i-car" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 16v-3l2-4h12l2 4v3" stroke-linejoin="round"/><path d="M4 16h16v2H4z"/><circle cx="8" cy="18" r="1.4"/><circle cx="16" cy="18" r="1.4"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M4 12H1M23 12h-3M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2"/></symbol>
+  <symbol id="i-bus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="16" height="12" rx="2"/><path d="M4 12h16"/><circle cx="8" cy="19" r="1.4"/><circle cx="16" cy="19" r="1.4"/></symbol>
+  <symbol id="i-wheelchair" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="15" cy="18" r="4"/><circle cx="8" cy="6" r="1.6"/><path d="M8 9v5h8M8 9l3 8"/></symbol>
+  <symbol id="i-contrast" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 6h14M9 6v13M15 10v9" stroke-linecap="round"/></symbol>
+  <symbol id="i-mic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></symbol>
+  <symbol id="i-settings" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 13a7.7 7.7 0 0 0 0-2l2-1.6-2-3.4-2.4 1a7.7 7.7 0 0 0-1.7-1L15 3h-4l-.3 2.6a7.7 7.7 0 0 0-1.7 1l-2.4-1-2 3.4L6.6 11a7.7 7.7 0 0 0 0 2l-2 1.6 2 3.4 2.4-1a7.7 7.7 0 0 0 1.7 1L11 21h4l.3-2.6a7.7 7.7 0 0 0 1.7-1l2.4 1 2-3.4-2-1.6z"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></symbol>
+  <symbol id="i-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 6 12 12M18 6 6 18" stroke-linecap="round"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18 15 15 0 0 1 0-18z"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 11 8-7 8 7v9a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z" stroke-linejoin="round"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3 4 6v6c0 5 3.5 7.5 8 9 4.5-1.5 8-4 8-9V6z" stroke-linejoin="round"/></symbol>
+  <symbol id="i-restroom" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="5" r="2"/><path d="M8 21v-7H6v-4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v4h-2v7"/></symbol>
+  <symbol id="i-food" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3v8M9 3v8M6 7h3M7.5 11v10M14 3s-2 2-2 5 2 5 2 5v8"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 13 4 4 10-10" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+</svg>
 
-  <!-- Live Accessibility Announcements Region -->
-  <span id="a11y-status" class="sr-only" role="status" aria-live="polite"></span>
+<div id="toast-stack" aria-live="polite"></div>
 
-  <!-- Header -->
-  <header class="border-b border-[var(--line)] bg-[var(--night-2)]/60 backdrop-blur-md relative z-10 flex-shrink-0">
-    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between gap-4">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-full flex items-center justify-center text-xl font-bold bg-[var(--pitch)] shadow-lg shadow-[var(--pitch)]/20 animate-pulse-slow" aria-hidden="true">⚽</div>
-        <div>
-          <h1 class="text-xl font-bold tracking-wide bg-gradient-to-r from-[var(--ink)] via-[var(--pitch)] to-[var(--floodlight)] bg-clip-text text-transparent">Stadium Copilot</h1>
-          <p class="text-[10px] tracking-widest mono text-[var(--ink-dim)] uppercase">FIFA World Cup 2026 · Matchday Intelligence</p>
-        </div>
-      </div>
+<!-- Settings -->
+<div id="settings-scrim"></div>
+<aside id="settings-panel" aria-label="Settings">
+  <div class="flex items-center justify-between mb-6">
+    <h2 class="text-lg font-bold">Settings</h2>
+    <button id="settings-close" class="btn btn-icon focus-ring" aria-label="Close settings"><svg width="18" height="18"><use href="#i-close"/></svg></button>
+  </div>
 
-      <div class="flex items-center gap-2">
-        <label for="lang-select" class="sr-only">Response language</label>
-        <select id="lang-select" class="focus-ring gate-badge text-sm rounded-lg px-2.5 py-1.5 mono text-[var(--ink)] cursor-pointer" aria-label="Choose response language">
-          <option value="en">EN</option>
-          <option value="es">ES</option>
-          <option value="fr">FR</option>
-          <option value="ar">AR</option>
-          <option value="pt">PT</option>
-          <option value="hi">HI</option>
-        </select>
-
-        <button id="contrast-toggle" type="button" class="focus-ring gate-badge text-sm rounded-lg px-3 py-1.5 mono transition duration-200 hover:bg-[var(--line)]" aria-pressed="false" aria-label="Toggle high contrast mode">
-          ◐ Contrast
-        </button>
-        <button id="text-toggle" type="button" class="focus-ring gate-badge text-sm rounded-lg px-3 py-1.5 mono transition duration-200 hover:bg-[var(--line)]" aria-pressed="false" aria-label="Toggle large text mode">
-          A+ Text
-        </button>
+  <div class="flex flex-col gap-6">
+    <div>
+      <p class="text-xs font-semibold uppercase tracking-wide" style="color:var(--ink-tertiary)">Appearance</p>
+      <div class="flex items-center justify-between mt-3">
+        <span class="text-sm">Dark mode</span>
+        <button class="switch focus-ring" id="theme-switch" role="switch" aria-checked="false" aria-label="Toggle dark mode"></button>
       </div>
     </div>
-    <div class="stitch"></div>
-  </header>
 
-  <!-- Main Dashboard Container -->
-  <main class="flex-1 max-w-7xl w-full mx-auto px-6 py-6 flex flex-col md:flex-row gap-6 overflow-hidden">
-    
-    <!-- Sidebar (Telemetry & Role Selector) -->
-    <aside class="w-full md:w-80 flex flex-col gap-4 flex-shrink-0 overflow-y-auto pr-1" aria-label="Stadium Live Feeds">
-      
-      <!-- Role/Status Card -->
-      <div class="glass-panel p-4 flex flex-col gap-3 flex-shrink-0">
-        <h2 class="text-xs uppercase tracking-widest font-semibold text-[var(--ink-dim)] mono">Active Context</h2>
-        
-        <div class="flex items-center justify-between">
-          <label for="role-select" class="text-sm text-[var(--ink-dim)]">User Role:</label>
-          <select id="role-select" class="focus-ring gate-badge text-xs rounded px-2 py-1 mono text-[var(--ink)] cursor-pointer" aria-label="Select your role for this demo">
-            <option value="fan">Fan</option>
-            <option value="volunteer">Volunteer</option>
-            <option value="staff">Staff</option>
-          </select>
-        </div>
+    <div>
+      <p class="text-xs font-semibold uppercase tracking-wide" style="color:var(--ink-tertiary)">Language</p>
+      <select id="lang-select" class="w-full mt-3 text-sm rounded-lg px-3 py-2.5 focus-ring" style="background:var(--bg-sunken); border:1px solid var(--line); color:var(--ink)">
+        <option value="en">English</option>
+        <option value="es">Español</option>
+        <option value="fr">Français</option>
+        <option value="ar">العربية</option>
+        <option value="pt">Português</option>
+        <option value="hi">हिन्दी</option>
+      </select>
+    </div>
 
-        <div class="flex items-center justify-between border-t border-[var(--line)] pt-3 text-xs mono">
-          <span class="text-[var(--ink-dim)]">Network:</span>
-          <span id="conn-status" class="flex items-center gap-1.5 font-semibold text-[#e05c5c]" role="status">
-            <span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping inline-block"></span> offline
-          </span>
+    <div>
+      <p class="text-xs font-semibold uppercase tracking-wide" style="color:var(--ink-tertiary)">Role (demo)</p>
+      <select id="role-select" class="w-full mt-3 text-sm rounded-lg px-3 py-2.5 focus-ring" style="background:var(--bg-sunken); border:1px solid var(--line); color:var(--ink)">
+        <option value="fan">Fan</option>
+        <option value="volunteer">Volunteer</option>
+        <option value="staff">Staff</option>
+      </select>
+    </div>
+
+    <div>
+      <p class="text-xs font-semibold uppercase tracking-wide mb-3" style="color:var(--ink-tertiary)">Notifications</p>
+      <div class="flex items-center justify-between">
+        <span class="text-sm">Live alerts</span>
+        <button class="switch focus-ring" id="notif-switch" role="switch" aria-checked="true" aria-label="Toggle notifications"></button>
+      </div>
+    </div>
+
+    <div>
+      <p class="text-xs font-semibold uppercase tracking-wide mb-3" style="color:var(--ink-tertiary)">Voice</p>
+      <div class="flex items-center justify-between">
+        <span class="text-sm">Speak responses aloud</span>
+        <button class="switch focus-ring" id="voice-out-switch" role="switch" aria-checked="true" aria-label="Toggle spoken responses"></button>
+      </div>
+    </div>
+
+    <div class="pt-4 border-t" style="border-color:var(--line)">
+      <p class="text-xs" style="color:var(--ink-tertiary)">Connection</p>
+      <p id="conn-status" class="text-sm font-semibold mt-1 flex items-center gap-1.5">
+        <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span> Offline
+      </p>
+    </div>
+  </div>
+</aside>
+
+<!-- Nav -->
+<header id="site-nav">
+  <div class="nav-inner">
+    <a href="#top" class="nav-logo flex items-center gap-2">
+      <span>⚽</span> Stadium Copilot
+    </a>
+    <nav class="hidden md:flex items-center gap-1" aria-label="Primary">
+      <a href="#top" class="nav-link" data-section="top">Home</a>
+      <a href="#chat" class="nav-link" data-section="chat">AI Copilot</a>
+      <a href="#map" class="nav-link" data-section="map">Live Map</a>
+      <a href="#status" class="nav-link" data-section="status">Crowd Status</a>
+      <a href="#accessibility" class="nav-link" data-section="accessibility">Accessibility</a>
+      <a href="#emergency" class="nav-link" data-section="emergency">Emergency</a>
+      <a href="#dashboard" class="nav-link" data-section="dashboard">Dashboard</a>
+    </nav>
+    <div class="flex items-center gap-2">
+      <button id="settings-open" class="btn btn-secondary focus-ring !px-3" aria-label="Open settings">
+        <svg width="16" height="16"><use href="#i-settings"/></svg>
+        <span class="hidden sm:inline">Settings</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container grid md:grid-cols-2 gap-14 items-center">
+      <div class="reveal">
+        <span class="eyebrow">FIFA World Cup 2026 · Matchday intelligence</span>
+        <h1 class="display-1">Every fan finds<br>their way.</h1>
+        <p class="lede mt-5 max-w-md">One assistant for navigation, crowd levels, accessibility, and emergencies — grounded in real stadium knowledge, not guesses.</p>
+        <div class="flex flex-wrap gap-3 mt-8">
+          <a href="#chat" class="btn btn-accent">Start chat</a>
+          <a href="#map" class="btn btn-secondary">View demo</a>
         </div>
       </div>
-
-      <!-- Telemetry Cards Panel -->
-      <div class="glass-panel p-4 flex flex-col gap-4 flex-shrink-0">
-        <div class="flex items-center justify-between border-b border-[var(--line)] pb-2 mb-1">
-          <h2 class="text-xs uppercase tracking-widest font-semibold text-[var(--ink-dim)] mono">Live Stadium Status</h2>
-          <span class="text-[10px] bg-[var(--pitch)]/20 text-[var(--pitch-light)] font-semibold px-2 py-0.5 rounded-full uppercase tracking-wider mono animate-pulse">Live</span>
-        </div>
-
-        <!-- Crowd Level Metric -->
-        <div class="flex flex-col gap-1.5 text-xs">
-          <div class="flex justify-between font-semibold">
-            <span class="text-[var(--ink-dim)] mono">GATE CROWD LEVELS</span>
-            <span id="tel-gate-status" class="text-[var(--floodlight)] mono">Gate 1 High</span>
-          </div>
-          <div class="w-full bg-[var(--line)] h-1.5 rounded-full overflow-hidden">
-            <div id="tel-gate-bar" class="bg-gradient-to-r from-[var(--pitch)] to-[var(--floodlight)] h-full rounded-full transition-all duration-500" style="width: 78%;"></div>
-          </div>
-        </div>
-
-        <!-- Parking Lots Occupancy -->
-        <div class="flex flex-col gap-2 text-xs">
-          <span class="text-[var(--ink-dim)] uppercase tracking-wide font-semibold mono">PARKING OCCUPANCY</span>
-          <div class="grid grid-cols-2 gap-2 text-[10px] mono">
-            <div class="bg-[var(--night-2)] border border-[var(--line)] rounded p-2 flex flex-col">
-              <span class="text-[var(--ink-dim)]">LOT A</span>
-              <span id="tel-lot-a" class="font-bold text-sm">345 / 500</span>
+      <div class="reveal">
+        <div class="device-frame">
+          <div class="device-screen">
+            <div class="msg-bot card-pad card" style="padding:12px 14px;">
+              <p class="text-[11px] font-semibold" style="color:var(--accent)">Copilot</p>
+              <p class="text-[13px] mt-1">Gate 3 is your best option right now — low crowd density and step-free access.</p>
             </div>
-            <div class="bg-[var(--night-2)] border border-[var(--line)] rounded p-2 flex flex-col">
-              <span class="text-[var(--ink-dim)]">LOT B</span>
-              <span id="tel-lot-b" class="font-bold text-sm">482 / 500</span>
+            <div class="msg-user" style="align-self:flex-end; padding:12px 14px; max-width:80%;">
+              <p class="text-[13px]">Wheelchair accessible entrance?</p>
             </div>
-          </div>
-        </div>
-
-        <!-- Transportation Status -->
-        <div class="flex flex-col gap-2 text-xs">
-          <span class="text-[var(--ink-dim)] uppercase tracking-wide font-semibold mono">PUBLIC TRANSIT</span>
-          <div class="flex flex-col gap-1.5 font-semibold text-[11px] mono">
-            <div class="flex justify-between bg-[var(--night-2)]/40 border border-[var(--line)] px-2.5 py-1.5 rounded">
-              <span class="text-[var(--ink-dim)]">METRO LINE 2</span>
-              <span id="tel-metro" class="text-[var(--pitch-light)]">● NOMINAL</span>
+            <div class="msg-bot card-pad card" style="padding:12px 14px;">
+              <p class="text-[11px] font-semibold" style="color:var(--accent)">Copilot</p>
+              <p class="text-[13px] mt-1">Gate 3 has ramp and elevator access, 40m from the North Concourse.</p>
             </div>
-            <div class="flex justify-between bg-[var(--night-2)]/40 border border-[var(--line)] px-2.5 py-1.5 rounded">
-              <span class="text-[var(--ink-dim)]">SHUTTLE WAIT</span>
-              <span id="tel-shuttle" class="text-[var(--floodlight)]">5 MINS</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Weather/Environment -->
-        <div class="flex flex-col gap-2 text-xs pt-3 border-t border-[var(--line)]">
-          <span class="text-[var(--ink-dim)] uppercase tracking-wide font-semibold mono">METEOROLOGICAL</span>
-          <div class="flex items-center justify-between text-xs mono">
-            <span class="text-sm font-semibold">☀️ 24°C</span>
-            <span class="text-[var(--ink-dim)]">HUMIDITY: 42%</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Collapsible Educational Details Accordions -->
-      <div class="flex flex-col gap-2.5 flex-shrink-0">
-        <!-- Accordion 1: Specialties -->
-        <div class="accordion-item bg-[var(--night-2)]/40 border border-[var(--line)] rounded-xl overflow-hidden transition-all duration-300">
-          <button type="button" class="accordion-trigger w-full px-4 py-3 flex justify-between items-center text-xs font-semibold uppercase tracking-wider text-[var(--ink-dim)] hover:text-white transition duration-200">
-            <span>Specialties &amp; Roles</span>
-            <span class="chevron text-[8px] transform transition-transform duration-200">▼</span>
-          </button>
-          <div class="accordion-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
-            <div class="p-3 text-[11px] leading-relaxed text-[var(--ink-dim)] border-t border-[var(--line)] flex flex-col gap-2 bg-[var(--night-2)]/20">
-              <p>⚽ <strong class="text-white">Navigation Agent:</strong> Directs fans to gates, concessions, toilets, and sections.</p>
-              <p>👥 <strong class="text-white">Crowd Agent:</strong> Uses live sensor telemetry to identify congestion and advise routes.</p>
-              <p>♿ <strong class="text-white">Accessibility Agent:</strong> Coordinates wheelchair routing, elevators, and quiet spaces.</p>
-              <p>🚨 <strong class="text-white">Emergency Agent:</strong> Flags safety issues, alerts stewards, and handles SOPs.</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Accordion 2: Workflow -->
-        <div class="accordion-item bg-[var(--night-2)]/40 border border-[var(--line)] rounded-xl overflow-hidden transition-all duration-300">
-          <button type="button" class="accordion-trigger w-full px-4 py-3 flex justify-between items-center text-xs font-semibold uppercase tracking-wider text-[var(--ink-dim)] hover:text-white transition duration-200">
-            <span>LangGraph Workflow</span>
-            <span class="chevron text-[8px] transform transition-transform duration-200">▼</span>
-          </button>
-          <div class="accordion-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
-            <div class="p-3 text-[10px] mono leading-relaxed text-[var(--ink-dim)] border-t border-[var(--line)] flex flex-col gap-1.5 bg-[var(--night-2)]/20">
-              <div>1. <span class="text-white">validate_input</span> (check injection)</div>
-              <div>2. <span class="text-white">planner</span> (agent routing)</div>
-              <div>3. <span class="text-white">knowledge_live_data</span> (fetch RAG)</div>
-              <div>4. <span class="text-white">parallel_agents</span> (execute LLM)</div>
-              <div>5. <span class="text-white">decision_fusion</span> (aggregate SOP)</div>
-              <div>6. <span class="text-white">response_gen</span> (translate)</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Accordion 3: Tech Features -->
-        <div class="accordion-item bg-[var(--night-2)]/40 border border-[var(--line)] rounded-xl overflow-hidden transition-all duration-300">
-          <button type="button" class="accordion-trigger w-full px-4 py-3 flex justify-between items-center text-xs font-semibold uppercase tracking-wider text-[var(--ink-dim)] hover:text-white transition duration-200">
-            <span>Special Operations</span>
-            <span class="chevron text-[8px] transform transition-transform duration-200">▼</span>
-          </button>
-          <div class="accordion-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
-            <div class="p-3 text-[11px] leading-relaxed text-[var(--ink-dim)] border-t border-[var(--line)] flex flex-col gap-2 bg-[var(--night-2)]/20">
-              <p>🧠 <strong class="text-white">Session Memory:</strong> Tracks multi-turn questions contextually.</p>
-              <p>🔒 <strong class="text-white">Output Validation:</strong> Guards against prompt leaks and hallucinated gates.</p>
-              <p>🚰 <strong class="text-white">Connection Pool:</strong> Shared HTTP resources via Uvicorn backend.</p>
+            <div class="mt-auto flex items-center gap-1.5 text-[11px]" style="color:var(--ink-tertiary)">
+              <span class="live-dot"></span> Live · 4 agents ready
             </div>
           </div>
         </div>
       </div>
+    </div>
+  </section>
 
-    </aside>
-
-    <!-- Chat Container -->
-    <section class="flex-1 flex flex-col glass-panel overflow-hidden relative" aria-label="Stadium Copilot Assistant">
-      
-      <!-- Top Chat Bar -->
-      <div class="bg-[var(--night-2)]/40 px-6 py-3 border-b border-[var(--line)] flex items-center justify-between flex-shrink-0">
-        <div class="flex items-center gap-2">
-          <span class="w-2.5 h-2.5 rounded-full bg-[var(--pitch-light)] animate-pulse"></span>
-          <span class="text-xs font-semibold uppercase tracking-wider text-[var(--ink-dim)] mono">GenAI Copilot Stream</span>
-        </div>
-        <span class="text-[10px] font-mono text-[var(--ink-dim)]">SECURE END-TO-END</span>
+  <!-- AI Copilot Chat -->
+  <section id="chat" class="section-tight">
+    <div class="container">
+      <div class="max-w-xl mx-auto text-center mb-10 reveal">
+        <span class="eyebrow">AI Copilot</span>
+        <h2 class="display-2">Ask anything about matchday.</h2>
+        <p class="lede mt-3">Navigation, crowd levels, accessibility, and emergency guidance — answered by four specialist agents working together.</p>
       </div>
 
-      <!-- Chat Log Area -->
-      <div id="chat-log" class="flex-1 overflow-y-auto px-6 py-4 flex flex-col gap-4 scrollbar-custom" aria-live="polite" aria-label="Conversation Log">
-        
-        <!-- Welcome Message -->
-        <div class="msg-copilot rounded-2xl p-4 max-w-xl self-start shadow-md">
-          <p class="text-xs uppercase tracking-widest font-semibold mb-1 text-[var(--pitch-light)] mono">Copilot Assistant</p>
-          <p class="text-sm leading-relaxed">Welcome to the Stadium Copilot. I can guide you with seat routing, crowd alerts, public transit connections, or emergency assistance. Ask a question to begin.</p>
+      <div class="card max-w-2xl mx-auto overflow-hidden reveal" aria-label="Stadium Copilot Assistant">
+        <div class="flex items-center justify-between px-5 py-3 border-b" style="border-color:var(--line)">
+          <span class="text-xs font-semibold flex items-center gap-2" style="color:var(--ink-secondary)"><span class="live-dot"></span> GenAI Copilot Stream</span>
+          <div class="flex items-center gap-1">
+            <button id="copy-last-btn" class="btn btn-icon focus-ring !w-8 !h-8" aria-label="Copy last response"><svg width="15" height="15"><use href="#i-copy"/></svg></button>
+            <button id="clear-chat-btn" class="btn btn-icon focus-ring !w-8 !h-8" aria-label="Clear conversation"><svg width="15" height="15"><use href="#i-trash"/></svg></button>
+          </div>
         </div>
 
-      </div>
+        <div id="chat-log" class="flex flex-col gap-3 px-5 py-4 overflow-y-auto" style="height:340px" aria-live="polite"></div>
 
-      <!-- Suggestion Chips -->
-      <div id="suggestions" class="px-6 py-2.5 flex flex-wrap gap-2 flex-shrink-0 border-t border-[var(--line)]/50 bg-[var(--night)]/20">
-        <button class="suggestion focus-ring gate-badge text-[11px] font-medium rounded-full px-3.5 py-1.5 mono text-[var(--ink-dim)] hover:text-[var(--pitch)] hover:border-[var(--pitch)] transition duration-200">Where's the nearest restroom to Gate 2?</button>
-        <button class="suggestion focus-ring gate-badge text-[11px] font-medium rounded-full px-3.5 py-1.5 mono text-[var(--ink-dim)] hover:text-[var(--pitch)] hover:border-[var(--pitch)] transition duration-200">Wheelchair accessible entrance?</button>
-        <button class="suggestion focus-ring gate-badge text-[11px] font-medium rounded-full px-3.5 py-1.5 mono text-[var(--ink-dim)] hover:text-[var(--pitch)] hover:border-[var(--pitch)] transition duration-200">Which gate is least crowded?</button>
-        <button class="suggestion focus-ring gate-badge text-[11px] font-medium rounded-full px-3.5 py-1.5 mono text-[var(--ink-dim)] hover:text-[var(--pitch)] hover:border-[var(--pitch)] transition duration-200">There's a medical emergency near section 105</button>
-      </div>
+        <div id="suggestions" class="flex gap-2 overflow-x-auto px-5 pb-3">
+          <button class="prompt-chip">Guide me to Gate B</button>
+          <button class="prompt-chip">Find the least crowded entrance</button>
+          <button class="prompt-chip">Nearest accessible restroom</button>
+          <button class="prompt-chip">Parking availability</button>
+          <button class="prompt-chip">Emergency exit route</button>
+        </div>
 
-      <!-- Form Chat Input Area -->
-      <footer class="border-t border-[var(--line)] bg-[var(--night-2)]/60 backdrop-blur-md flex-shrink-0">
-        <div class="stitch"></div>
-        <form id="chat-form" class="px-6 py-4 flex gap-2.5 items-end">
+        <form id="chat-form" class="flex gap-2 items-end px-5 py-4 border-t" style="border-color:var(--line)">
+          <label for="chat-input" class="sr-only">Type your question</label>
           <div class="relative flex-1">
-            <label for="chat-input" class="sr-only">Type your question to the stadium copilot</label>
             <textarea id="chat-input" rows="1" maxlength="1000"
-                      class="focus-ring w-full rounded-xl px-4 py-3.5 pr-12 resize-none gate-badge bg-[var(--night)]/80 text-sm leading-relaxed"
-                      placeholder="Ask about navigation, crowds, accessibility, or emergencies…"
-                      aria-describedby="input-help"></textarea>
-            
-            <!-- Voice Dictation Button inside textarea -->
-            <button type="button" id="mic-btn"
-                    class="focus-ring absolute right-3 bottom-2.5 text-lg opacity-70 hover:opacity-100 transition duration-200 p-1 rounded-lg"
-                    aria-pressed="false" aria-label="Use voice input">
-              🎙️
+              class="w-full rounded-xl px-4 py-3 pr-11 resize-none text-sm focus-ring"
+              style="background:var(--bg-sunken); border:1px solid var(--line); color:var(--ink)"
+              placeholder="Ask about navigation, crowds, accessibility…"></textarea>
+            <button type="button" id="mic-btn" class="absolute right-2.5 bottom-2.5 btn btn-icon focus-ring !w-7 !h-7" aria-pressed="false" aria-label="Use voice input">
+              <svg width="14" height="14"><use href="#i-mic"/></svg>
             </button>
           </div>
-          <button type="submit"
-                  class="focus-ring rounded-xl px-6 py-3.5 font-bold uppercase tracking-wider text-xs mono transition duration-300 transform active:scale-95 bg-[var(--pitch)] text-white hover:bg-[var(--pitch-light)] shadow-lg shadow-[var(--pitch)]/20">
-            Send
-          </button>
+          <button type="submit" class="btn btn-accent">Send</button>
         </form>
-        <p id="input-help" class="sr-only">Press Enter to send, Shift+Enter for a new line.</p>
-      </footer>
-
-    </section>
-
-  </main>
-
-  <!-- Footer -->
-  <footer class="border-t border-[var(--line)] bg-[var(--night-2)]/60 backdrop-blur-md relative z-10 flex-shrink-0 text-center py-3 text-xs mono text-[var(--ink-dim)]">
-    <div class="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-3">
-      <div>
-        Designed &amp; Developed by <span class="text-white font-semibold">Boda Shanmukha Datta</span>
-      </div>
-      <div class="flex items-center gap-4">
-        <a href="https://github.com/shanmukhdatta" target="_blank" rel="noopener noreferrer" class="hover:text-white transition duration-200 flex items-center gap-1">
-          <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-          GitHub
-        </a>
-        <span class="text-[var(--line)]">|</span>
-        <a href="https://www.linkedin.com/search/results/all/?keywords=Boda%20Shanmukha%20Datta" target="_blank" rel="noopener noreferrer" class="hover:text-white transition duration-200 flex items-center gap-1">
-          <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
-          LinkedIn
-        </a>
       </div>
     </div>
-  </footer>
+  </section>
+
+  <!-- Stadium Map -->
+  <section id="map" class="section-tight" style="background:var(--bg-sunken)">
+    <div class="container feature-row">
+      <div class="reveal">
+        <span class="eyebrow">Live stadium map</span>
+        <h2 class="display-2">See the stadium the way stewards do.</h2>
+        <p class="lede mt-4">Gates, restrooms, food stalls, and accessible routes — plotted so you always know what's nearby.</p>
+        <div class="flex items-center justify-between mt-6 max-w-xs card card-pad">
+          <span class="text-sm font-medium">Show accessible routes</span>
+          <button class="switch focus-ring" id="accessible-route-switch" role="switch" aria-checked="false" aria-label="Toggle accessible routes on map"></button>
+        </div>
+        <p class="text-xs mt-3" style="color:var(--ink-tertiary)">Illustrative layout for demo purposes — positions are representative, not GPS-accurate.</p>
+      </div>
+      <div class="feature-visual reveal">
+        <div class="map-wrap" id="stadium-map">
+          <div class="map-pin" style="top:15%; left:50%;" tabindex="0"><svg width="12" height="12"><use href="#i-flag"/></svg><span class="map-tooltip">Gate 1 — North</span></div>
+          <div class="map-pin" style="top:50%; left:8%;" tabindex="0"><svg width="12" height="12"><use href="#i-flag"/></svg><span class="map-tooltip">Gate 2 — West</span></div>
+          <div class="map-pin accessible" style="top:50%; left:92%;" tabindex="0"><svg width="12" height="12"><use href="#i-wheelchair"/></svg><span class="map-tooltip">Gate 3 — Accessible</span></div>
+          <div class="map-pin" style="top:85%; left:50%;" tabindex="0"><svg width="12" height="12"><use href="#i-flag"/></svg><span class="map-tooltip">Gate 4 — South</span></div>
+          <div class="map-pin" style="top:38%; left:38%;" tabindex="0"><svg width="12" height="12"><use href="#i-restroom"/></svg><span class="map-tooltip">Restrooms</span></div>
+          <div class="map-pin" style="top:38%; left:62%;" tabindex="0"><svg width="12" height="12"><use href="#i-food"/></svg><span class="map-tooltip">Food Court B</span></div>
+          <div class="map-pin" style="top:65%; left:38%;" tabindex="0"><svg width="12" height="12"><use href="#i-shield"/></svg><span class="map-tooltip">Medical Centre</span></div>
+          <div class="map-pin" style="top:65%; left:62%;" tabindex="0"><svg width="12" height="12"><use href="#i-car"/></svg><span class="map-tooltip">Parking P2</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Live Status + Recommendations -->
+  <section id="status" class="section-tight">
+    <div class="container">
+      <div class="max-w-xl mb-10 reveal">
+        <span class="eyebrow">Live stadium status</span>
+        <h2 class="display-2">Everything, at a glance.</h2>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 reveal">
+        <div class="card card-pad stat-card">
+          <div class="flex items-start justify-between">
+            <div class="stat-icon"><svg width="18" height="18"><use href="#i-flag"/></svg></div>
+            <span class="badge badge-live">Live</span>
+          </div>
+          <span class="stat-label mt-2">Crowd density</span>
+          <span class="stat-value" id="stat-crowd">Gate 1 · High</span>
+          <span class="text-xs" id="stat-crowd-time" style="color:var(--ink-tertiary)">Updated just now</span>
+        </div>
+        <div class="card card-pad stat-card">
+          <div class="stat-icon"><svg width="18" height="18"><use href="#i-bell"/></svg></div>
+          <span class="stat-label mt-2">Queue length</span>
+          <span class="stat-value" id="stat-queue">6–8 min</span>
+          <span class="text-xs" id="stat-queue-time" style="color:var(--ink-tertiary)">Updated just now</span>
+        </div>
+        <div class="card card-pad stat-card">
+          <div class="stat-icon"><svg width="18" height="18"><use href="#i-car"/></svg></div>
+          <span class="stat-label mt-2">Parking availability</span>
+          <span class="stat-value" id="stat-parking">Lot A · 345/500</span>
+          <span class="text-xs" id="stat-parking-time" style="color:var(--ink-tertiary)">Updated just now</span>
+        </div>
+        <div class="card card-pad stat-card">
+          <div class="stat-icon"><svg width="18" height="18"><use href="#i-sun"/></svg></div>
+          <span class="stat-label mt-2">Weather</span>
+          <span class="stat-value" id="stat-weather">24°C · Clear</span>
+          <span class="text-xs" id="stat-weather-time" style="color:var(--ink-tertiary)">Updated just now</span>
+        </div>
+        <div class="card card-pad stat-card">
+          <div class="stat-icon"><svg width="18" height="18"><use href="#i-bus"/></svg></div>
+          <span class="stat-label mt-2">Public transport</span>
+          <span class="stat-value" id="stat-transit">Metro L2 · On time</span>
+          <span class="text-xs" id="stat-transit-time" style="color:var(--ink-tertiary)">Updated just now</span>
+        </div>
+        <div class="card card-pad stat-card">
+          <div class="stat-icon" style="background:var(--accent-tint)"><svg width="18" height="18"><use href="#i-shield"/></svg></div>
+          <span class="stat-label mt-2">Emergency alerts</span>
+          <span class="stat-value">All clear</span>
+          <span class="text-xs" style="color:var(--ink-tertiary)">No active incidents</span>
+        </div>
+      </div>
+
+      <div class="card card-pad mt-6 reveal">
+        <span class="eyebrow">AI recommendations</span>
+        <ul id="recommendations-list" class="flex flex-col gap-3 mt-2 text-sm"></ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Accessibility -->
+  <section id="accessibility" class="section-tight" style="background:var(--bg-sunken)">
+    <div class="container feature-row reverse">
+      <div class="reveal">
+        <span class="eyebrow">Accessibility</span>
+        <h2 class="display-2">Built for every fan.</h2>
+        <p class="lede mt-4">Toggle what you need — settings apply instantly across navigation, chat, and the live map.</p>
+      </div>
+      <div class="feature-visual grid sm:grid-cols-2 gap-3 reveal">
+        <div class="card card-pad flex items-center justify-between gap-3">
+          <span class="text-sm font-medium flex items-center gap-2"><svg width="16" height="16"><use href="#i-wheelchair"/></svg>Wheelchair mode</span>
+          <button class="switch focus-ring" id="wheelchair-switch" role="switch" aria-checked="false" aria-label="Toggle wheelchair mode"></button>
+        </div>
+        <div class="card card-pad flex items-center justify-between gap-3">
+          <span class="text-sm font-medium flex items-center gap-2"><svg width="16" height="16"><use href="#i-mic"/></svg>Voice navigation</span>
+          <button class="switch focus-ring" id="voice-nav-switch" role="switch" aria-checked="false" aria-label="Toggle voice navigation"></button>
+        </div>
+        <div class="card card-pad flex items-center justify-between gap-3">
+          <span class="text-sm font-medium flex items-center gap-2"><svg width="16" height="16"><use href="#i-contrast"/></svg>High contrast</span>
+          <button class="switch focus-ring" id="contrast-switch" role="switch" aria-checked="false" aria-label="Toggle high contrast mode"></button>
+        </div>
+        <div class="card card-pad flex items-center justify-between gap-3">
+          <span class="text-sm font-medium flex items-center gap-2"><svg width="16" height="16"><use href="#i-text"/></svg>Large font</span>
+          <button class="switch focus-ring" id="text-switch" role="switch" aria-checked="false" aria-label="Toggle large text mode"></button>
+        </div>
+        <div class="card card-pad flex items-center justify-between gap-3">
+          <span class="text-sm font-medium">Screen reader mode</span>
+          <button class="switch focus-ring" id="screenreader-switch" role="switch" aria-checked="false" aria-label="Toggle extra screen reader announcements"></button>
+        </div>
+        <div class="card card-pad flex items-center justify-between gap-3">
+          <span class="text-sm font-medium">Sign language support</span>
+          <span class="badge badge-soon">Coming soon</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Emergency -->
+  <section id="emergency" class="section-tight">
+    <div class="container">
+      <div class="max-w-xl mx-auto text-center mb-10 reveal">
+        <span class="eyebrow" style="color:var(--danger)">Emergency</span>
+        <h2 class="display-2">Help, the moment you need it.</h2>
+        <p class="lede mt-3">These route straight to the Emergency Agent — no menus, no delay.</p>
+      </div>
+      <div class="max-w-2xl mx-auto reveal">
+        <button class="sos-btn" id="sos-btn">
+          <svg width="20" height="20"><use href="#i-shield"/></svg> SOS — Emergency assistance
+        </button>
+        <div class="flex flex-wrap gap-2 justify-center mt-4">
+          <button class="chip emergency-chip" data-msg="I need medical assistance">Medical assistance</button>
+          <button class="chip emergency-chip" data-msg="There is a fire emergency">Fire emergency</button>
+          <button class="chip emergency-chip" data-msg="I've lost my child, please help">Lost child</button>
+          <button class="chip emergency-chip" data-msg="I need security help">Security help</button>
+          <button class="chip emergency-chip" data-msg="What's the nearest exit from my location?">Nearest exit</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Dashboard preview -->
+  <section id="dashboard" class="section-tight" style="background:var(--bg-sunken)">
+    <div class="container">
+      <div class="max-w-xl mb-10 reveal">
+        <span class="eyebrow">Operations preview</span>
+        <h2 class="display-2">What stewards see.</h2>
+        <p class="lede mt-3">A simplified snapshot of the live operations view, shown here for demo purposes with the role selected in Settings.</p>
+      </div>
+      <div class="grid md:grid-cols-2 gap-5 reveal">
+        <div class="card card-pad">
+          <span class="eyebrow">Crowd heatmap</span>
+          <div id="heatmap-list" class="flex flex-col gap-3 mt-3"></div>
+        </div>
+        <div class="card card-pad">
+          <span class="eyebrow">Snapshot</span>
+          <div class="grid grid-cols-2 gap-4 mt-3">
+            <div><p class="stat-label">Active alerts</p><p class="stat-value" id="ops-alerts">0</p></div>
+            <div><p class="stat-label">Volunteers on duty</p><p class="stat-value" id="ops-volunteers">42</p></div>
+            <div><p class="stat-label">Incident reports</p><p class="stat-value" id="ops-incidents">1</p></div>
+            <div><p class="stat-label">Resource use</p><p class="stat-value" id="ops-resource">68%</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Under the hood -->
+  <section class="section-tight">
+    <div class="container">
+      <div class="max-w-xl mb-8 reveal">
+        <span class="eyebrow">Under the hood</span>
+        <h2 class="display-2">How the copilot decides.</h2>
+      </div>
+      <div class="flex flex-col gap-2.5 max-w-2xl reveal">
+        <div class="accordion-item">
+          <button type="button" class="accordion-trigger w-full px-5 py-4 flex justify-between items-center text-sm font-semibold">
+            Specialties &amp; roles <svg class="chevron" width="14" height="14"><use href="#i-chevron"/></svg>
+          </button>
+          <div class="accordion-content max-h-0 overflow-hidden transition-all duration-300">
+            <div class="px-5 pb-4 text-sm flex flex-col gap-2" style="color:var(--ink-secondary)">
+              <p><strong style="color:var(--ink)">Navigation agent:</strong> directs fans to gates, concessions, toilets, and sections.</p>
+              <p><strong style="color:var(--ink)">Crowd agent:</strong> uses live sensor telemetry to identify congestion and advise routes.</p>
+              <p><strong style="color:var(--ink)">Accessibility agent:</strong> coordinates wheelchair routing, elevators, and quiet spaces.</p>
+              <p><strong style="color:var(--ink)">Emergency agent:</strong> flags safety issues, alerts stewards, and handles SOPs.</p>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button type="button" class="accordion-trigger w-full px-5 py-4 flex justify-between items-center text-sm font-semibold">
+            LangGraph workflow <svg class="chevron" width="14" height="14"><use href="#i-chevron"/></svg>
+          </button>
+          <div class="accordion-content max-h-0 overflow-hidden transition-all duration-300">
+            <div class="px-5 pb-4 text-sm font-mono flex flex-col gap-1.5" style="color:var(--ink-secondary)">
+              <div>1. validate_input — check injection</div>
+              <div>2. planner — agent routing</div>
+              <div>3. knowledge_live_data — fetch RAG</div>
+              <div>4. parallel_agents — execute LLM</div>
+              <div>5. decision_fusion — aggregate SOP</div>
+              <div>6. response_gen — translate</div>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button type="button" class="accordion-trigger w-full px-5 py-4 flex justify-between items-center text-sm font-semibold">
+            Special operations <svg class="chevron" width="14" height="14"><use href="#i-chevron"/></svg>
+          </button>
+          <div class="accordion-content max-h-0 overflow-hidden transition-all duration-300">
+            <div class="px-5 pb-4 text-sm flex flex-col gap-2" style="color:var(--ink-secondary)">
+              <p><strong style="color:var(--ink)">Session memory:</strong> tracks multi-turn questions contextually.</p>
+              <p><strong style="color:var(--ink)">Output validation:</strong> guards against prompt leaks and hallucinated gates.</p>
+              <p><strong style="color:var(--ink)">Connection pool:</strong> shared HTTP resources via the Uvicorn backend.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- Footer -->
+<footer class="section-tight border-t" style="border-color:var(--line)">
+  <div class="container grid sm:grid-cols-2 md:grid-cols-4 gap-8 text-sm">
+    <div>
+      <p class="font-bold mb-3">Stadium Copilot</p>
+      <p style="color:var(--ink-secondary)">A LangGraph-orchestrated multi-agent assistant for FIFA World Cup 2026, built as a working MVP slice of a larger designed system.</p>
+    </div>
+    <div>
+      <p class="font-semibold mb-3" style="color:var(--ink-tertiary)">Technology</p>
+      <p style="color:var(--ink-secondary)">FastAPI · LangGraph · FAISS + TF-IDF RAG · JWT auth · Tailwind</p>
+    </div>
+    <div>
+      <p class="font-semibold mb-3" style="color:var(--ink-tertiary)">Project</p>
+      <div class="flex flex-col gap-2">
+        <a href="https://github.com/shanmukhdatta" target="_blank" rel="noopener noreferrer" class="hover:underline" style="color:var(--ink-secondary)">GitHub</a>
+        <a href="https://www.linkedin.com/search/results/all/?keywords=Boda%20Shanmukha%20Datta" target="_blank" rel="noopener noreferrer" class="hover:underline" style="color:var(--ink-secondary)">LinkedIn</a>
+      </div>
+    </div>
+    <div>
+      <p class="font-semibold mb-3" style="color:var(--ink-tertiary)">Team</p>
+      <p style="color:var(--ink-secondary)">Designed &amp; developed by Boda Shanmukha Datta</p>
+    </div>
+  </div>
+  <div class="container mt-10 pt-6 border-t text-xs flex flex-col sm:flex-row justify-between gap-2" style="border-color:var(--line); color:var(--ink-tertiary)">
+    <span>© 2026 Stadium Copilot MVP · Not an official FIFA product</span>
+    <span>Privacy · About · Contact</span>
+  </div>
+</footer>
+
+<!-- Mobile bottom nav -->
+<nav id="bottom-nav" aria-label="Mobile navigation">
+  <a href="#top" class="bnav-item active"><svg width="20" height="20"><use href="#i-home"/></svg>Home</a>
+  <a href="#map" class="bnav-item"><svg width="20" height="20"><use href="#i-map"/></svg>Map</a>
+  <a href="#emergency" class="bnav-item"><svg width="20" height="20"><use href="#i-shield"/></svg>Alerts</a>
+  <button id="settings-open-mobile" class="bnav-item"><svg width="20" height="20"><use href="#i-settings"/></svg>Settings</button>
+</nav>
+<button id="chat-fab" aria-label="Open chat" onclick="document.getElementById('chat').scrollIntoView({behavior:'smooth'})">
+  <svg width="22" height="22"><use href="#i-chat"/></svg>
+</button>
 
 <script src="app.js"></script>
 </body>
